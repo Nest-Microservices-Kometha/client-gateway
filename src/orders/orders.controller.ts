@@ -41,17 +41,11 @@ export class OrdersController {
 
   @Post()
   createOrder(@Body() createOrderDto: CreateOrderDto) {
-    return this.ordersClient.send(
-      'createOrder',
-      createOrderDto,
-    );
+    return this.ordersClient.send('createOrder', createOrderDto);
   }
 
   @Patch(':id')
-  async updateOrder(
-    @Param('id') id: string,
-    @Body() updateOrderDto: any,
-  ) {
+  async updateOrder(@Param('id') id: string, @Body() updateOrderDto: any) {
     try {
       const order = await firstValueFrom(
         this.ordersClient.send('changeOrderStatus', {
