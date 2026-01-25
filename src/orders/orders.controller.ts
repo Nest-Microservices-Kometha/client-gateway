@@ -7,7 +7,6 @@ import {
   Param,
   Inject,
   Query,
-  ParseIntPipe,
 } from '@nestjs/common';
 import { ORDER_SERVICE } from 'src/config/services';
 import { ClientProxy, RpcException } from '@nestjs/microservices';
