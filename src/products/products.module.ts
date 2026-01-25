@@ -6,7 +6,6 @@ import { envs } from 'src/config';
 
 @Module({
   controllers: [ProductsController],
-  providers: [],
   imports: [
     ClientsModule.register([
       {
