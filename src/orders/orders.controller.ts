@@ -56,9 +56,17 @@ export class OrdersController {
   }
 
   @Post()
-  createOrder(@Body() createOrderDto: CreateOrderDto) {
-    return this.ordersClient.send('createOrder', createOrderDto);
+  async createOrder(@Body() createOrderDto: CreateOrderDto) {
+    try {
+      const order = await firstValueFrom(
+        this.ordersClient.send('createOrder', createOrderDto),
+      );
+      return order;
+    } catch (error) {
+      throw new RpcException(error);
+    }
   }
+  // return this.ordersClient.send('createOrder', createOrderDto);
 
   @Patch(':id')
   async changeOrderStatus(
@@ -75,8 +83,8 @@ export class OrdersController {
 
       return order;
     } catch (error) {
-      console.log(statusDto.status)
-      console.log(`Ocurrio un error ${JSON.stringify(error)}`)
+      console.log(statusDto.status);
+      console.log(`Ocurrio un error ${JSON.stringify(error)}`);
       throw new RpcException(error);
     }
   }
