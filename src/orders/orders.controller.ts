@@ -9,7 +9,7 @@ import {
   Query,
   ParseUUIDPipe,
 } from '@nestjs/common';
-import { ORDER_SERVICE } from 'src/config/services';
+import { NATS_SERVICE } from 'src/config/services';
 import { ClientProxy, RpcException } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
 import { CreateOrderDto } from './dto/create-order.dto';
@@ -18,13 +18,11 @@ import { PaginationDto } from 'src/common';
 
 @Controller('orders')
 export class OrdersController {
-  constructor(
-    @Inject(ORDER_SERVICE) private readonly ordersClient: ClientProxy,
-  ) {}
+  constructor(@Inject(NATS_SERVICE) private readonly client: ClientProxy) {}
 
   @Get()
   findOrders(@Query() orderPaginationDto: OrderPaginationDto) {
-    return this.ordersClient.send('findAllOrders', orderPaginationDto);
+    return this.client.send('findAllOrders', orderPaginationDto);
   }
 
   @Get(':status')
@@ -33,7 +31,7 @@ export class OrdersController {
     @Query() paginaitionDto: PaginationDto,
   ) {
     try {
-      return this.ordersClient.send('findAllOrders', {
+      return this.client.send('findAllOrders', {
         ...paginaitionDto,
         status: statusDto.status,
       });
@@ -46,7 +44,7 @@ export class OrdersController {
   async findOrderById(@Param('id') id: string) {
     try {
       const order = await firstValueFrom(
-        this.ordersClient.send('findOneOrder', { id }),
+        this.client.send('findOneOrder', { id }),
       );
 
       return order;
@@ -59,7 +57,7 @@ export class OrdersController {
   async createOrder(@Body() createOrderDto: CreateOrderDto) {
     try {
       const order = await firstValueFrom(
-        this.ordersClient.send('createOrder', createOrderDto),
+        this.client.send('createOrder', createOrderDto),
       );
       return order;
     } catch (error) {
@@ -75,7 +73,7 @@ export class OrdersController {
   ) {
     try {
       const order = await firstValueFrom(
-        this.ordersClient.send('changeOrderStatus', {
+        this.client.send('changeOrderStatus', {
           id,
           status: statusDto.status,
         }),
