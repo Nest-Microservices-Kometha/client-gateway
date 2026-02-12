@@ -11,18 +11,19 @@ async function bootstrap() {
 
   app.setGlobalPrefix('api');
 
-    app.useGlobalPipes(
+  app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
       forbidNonWhitelisted: true,
     }),
   );
 
-  app.useGlobalFilters(new RpcCustomExceptionFilter)
-
+  app.useGlobalFilters(new RpcCustomExceptionFilter());
 
   await app.listen(envs.port);
 
-  logger.log(`Gateway running on port ${envs.port}`)
+  console.log('Hola mundo!! primer cambio :D');
+
+  logger.log(`Gateway running on port ${envs.port}`);
 }
 bootstrap();
